@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 150" role="img" aria-labelledby="title desc">
+  <title id="title">Logo MPM</title>
+  <desc id="desc">Letras MPM volumétricas inspiradas en las formas claras de las grutas</desc>
+  <defs>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffdf8"/><stop offset="1" stop-color="#dfe4e1"/>
+    </linearGradient>
+    <linearGradient id="side" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b7bfbd"/><stop offset="1" stop-color="#788a87"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#092b29" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <g filter="url(#soft)" font-family="Arial Rounded MT Bold, Arial Black, sans-serif" font-size="106" font-weight="900" letter-spacing="-8">
+    <text x="14" y="119" fill="url(#side)" stroke="#788a87" stroke-width="12" stroke-linejoin="round">MPM</text>
+    <text x="7" y="109" fill="url(#face)" stroke="#f8f5ed" stroke-width="5" stroke-linejoin="round" paint-order="stroke">MPM</text>
+  </g>
+  <path d="M22 128c71-12 137-12 197 0 60 12 119 11 178-3" fill="none" stroke="#e86f51" stroke-width="6" stroke-linecap="round"/>
+  <path d="M27 139c68-9 130-8 188 2 61 10 118 9 175-4" fill="none" stroke="#f5c15a" stroke-width="3" stroke-linecap="round"/>
+</svg>
