@@ -60,7 +60,7 @@ a { color: inherit; text-decoration: none; }
 
 .hero { min-height: 810px; position: relative; display: grid; align-items: center; color: white; overflow: hidden; }
 .hero__image, .hero__veil { position: absolute; inset: 0; }
-.hero__image { background: url('/public/images/hero-gruta.webp') center 54% / cover no-repeat; transform: scale(1.02); animation: hero-in 1.5s cubic-bezier(.2,.7,.2,1) both; }
+.hero__image { background: url('/public/images/hero-las-grutas.webp') center 54% / cover no-repeat; transform: scale(1.02); animation: hero-in 1.5s cubic-bezier(.2,.7,.2,1) both; }
 .hero__veil { background: linear-gradient(90deg, rgba(6,29,27,.78) 0%, rgba(6,29,27,.53) 46%, rgba(6,29,27,.12) 73%), linear-gradient(0deg, rgba(6,29,27,.55), transparent 42%); }
 .hero__layout { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 1.2fr) 440px; align-items: center; gap: 80px; padding-top: 100px; }
 .hero__copy { padding-top: 26px; }
@@ -265,7 +265,7 @@ input:focus, select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgb
   .brand__meta strong { font-size: 10px; }
   .brand__meta em { font-size: 13px; }
   .hero { padding-top: 146px; }
-  .hero__image { background-image: url('/public/images/hero-gruta-mobile.webp'); background-position: 50% 48%; }
+  .hero__image { background-image: url('/public/images/hero-las-grutas-mobile.webp'); background-position: 50% 52%; }
   .hero__veil { background: linear-gradient(0deg, rgba(6,29,27,.9) 8%, rgba(6,29,27,.48) 65%, rgba(6,29,27,.36)); }
   .hero h1 { font-size: clamp(56px, 18vw, 78px); }
   .hero__lead { font-size: 16px; }
