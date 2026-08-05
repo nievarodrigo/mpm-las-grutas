@@ -254,10 +254,12 @@ input:focus, select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgb
 
 @media (max-width: 620px) {
   :root { --shell: calc(100% - 32px); }
-  .topbar__inner span:last-child { display: none; }
-  .topbar__inner { justify-content: center; }
-  .brand img { width: 76px; }
-  .brand span { display: none; }
+  .topbar { display: none; }
+  .site-header, .site-header.is-sticky { top: 0; }
+  .brand { gap: 11px; }
+  .brand img { width: 94px; height: 56px; }
+  .brand span { display: flex; font-size: 8px; letter-spacing: .11em; line-height: 1.1; }
+  .brand strong { font-size: 10px; letter-spacing: .1em; }
   .hero { padding-top: 146px; }
   .hero__image { background-position: 58% center; }
   .hero__veil { background: linear-gradient(0deg, rgba(6,29,27,.9) 8%, rgba(6,29,27,.48) 65%, rgba(6,29,27,.36)); }

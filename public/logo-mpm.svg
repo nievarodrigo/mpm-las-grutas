@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 150" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 125" role="img" aria-labelledby="title desc">
   <title id="title">Logo MPM</title>
   <desc id="desc">Letras MPM volumétricas inspiradas en las formas claras de las grutas</desc>
   <defs>
@@ -16,6 +16,4 @@
     <text x="14" y="119" fill="url(#side)" stroke="#788a87" stroke-width="12" stroke-linejoin="round">MPM</text>
     <text x="7" y="109" fill="url(#face)" stroke="#f8f5ed" stroke-width="5" stroke-linejoin="round" paint-order="stroke">MPM</text>
   </g>
-  <path d="M22 128c71-12 137-12 197 0 60 12 119 11 178-3" fill="none" stroke="#e86f51" stroke-width="6" stroke-linecap="round"/>
-  <path d="M27 139c68-9 130-8 188 2 61 10 118 9 175-4" fill="none" stroke="#f5c15a" stroke-width="3" stroke-linecap="round"/>
 </svg>
