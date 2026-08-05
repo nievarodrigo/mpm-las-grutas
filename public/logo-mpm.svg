@@ -16,4 +16,5 @@
     <text x="14" y="119" fill="url(#side)" stroke="#788a87" stroke-width="12" stroke-linejoin="round">MPM</text>
     <text x="7" y="109" fill="url(#face)" stroke="#f8f5ed" stroke-width="5" stroke-linejoin="round" paint-order="stroke">MPM</text>
   </g>
+  <path d="M22 119c71-12 137-12 197 0 60 12 119 11 178-3" fill="none" stroke="#e86f51" stroke-width="5" stroke-linecap="round"/>
 </svg>
