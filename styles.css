@@ -75,6 +75,7 @@ a { color: inherit; text-decoration: none; }
 .hero__actions { display: flex; align-items: center; gap: 30px; margin-top: 36px; }
 .hero__trust { margin-top: 44px; display: flex; align-items: center; gap: 14px; font-size: 13px; color: rgba(255,255,255,.8); }
 .stars { color: var(--sun); letter-spacing: 2px; }
+.owner-trust { padding-left: 14px; border-left: 1px solid rgba(255,255,255,.34); color: rgba(255,255,255,.9); font-size: 11px; }
 .hero__scroll { position: absolute; z-index: 4; left: 28px; bottom: 42px; display: flex; align-items: center; gap: 12px; font-size: 9px; letter-spacing: .2em; writing-mode: vertical-rl; }
 .hero__scroll span { display: block; width: 1px; height: 46px; background: rgba(255,255,255,.5); }
 
@@ -264,6 +265,7 @@ input:focus, select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgb
   .hero__lead { font-size: 16px; }
   .hero__actions { align-items: flex-start; flex-direction: column; gap: 20px; }
   .hero__trust { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .owner-trust { padding-left: 0; border-left: 0; }
   .lead-card { margin-inline: -2px; padding: 28px 20px; }
   .lead-card__tag { display: none; }
   .form-row, .quick-form__row { grid-template-columns: 1fr; }
