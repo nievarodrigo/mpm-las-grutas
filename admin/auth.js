@@ -1,93 +1,102 @@
-const SUPABASE_URL = "https://pobhshndkzdekreubkoy.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvYmhzaG5ka3pkZWtyZXVia295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5NzM0OTIsImV4cCI6MjEwMTU0OTQ5Mn0.6rTNHq6rgTIG_NpwzAsK2Imz07zuDf9bUhTRJv7mvTE";
-const ADMIN_EMAIL = "admin@mpmalquileres.internal";
-const SESSION_KEY = "mpm_admin_session";
+// Todo envuelto en un IIFE a propósito: este script y admin/app.js comparten
+// el mismo scope global del navegador (no son módulos ES). Antes, login/
+// logout/ensureSession/authedFetch se declaraban como funciones globales
+// acá Y como const al desestructurarlas en app.js — mismo nombre en el
+// mismo scope global, lo que rompía la carga entera de app.js en Firefox
+// ("redeclaration of non-configurable global property"). Con el IIFE, lo
+// único que queda expuesto afuera es window.mpmAdminAuth.
+(function () {
+  const SUPABASE_URL = "https://pobhshndkzdekreubkoy.supabase.co";
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvYmhzaG5ka3pkZWtyZXVia295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5NzM0OTIsImV4cCI6MjEwMTU0OTQ5Mn0.6rTNHq6rgTIG_NpwzAsK2Imz07zuDf9bUhTRJv7mvTE";
+  const ADMIN_EMAIL = "admin@mpmalquileres.internal";
+  const SESSION_KEY = "mpm_admin_session";
 
-function readSession() {
-  try {
-    return JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
-  } catch (_) {
-    return null;
+  function readSession() {
+    try {
+      return JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+    } catch (_) {
+      return null;
+    }
   }
-}
 
-function writeSession(session) {
-  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-}
-
-function clearSession() {
-  localStorage.removeItem(SESSION_KEY);
-}
-
-function toSession(tokenResponse) {
-  return {
-    accessToken: tokenResponse.access_token,
-    refreshToken: tokenResponse.refresh_token,
-    expiresAt: Date.now() + tokenResponse.expires_in * 1000,
-  };
-}
-
-async function login(password) {
-  const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
-    method: "POST",
-    headers: { apikey: SUPABASE_ANON_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ email: ADMIN_EMAIL, password }),
-  });
-  if (!response.ok) return false;
-  const data = await response.json();
-  writeSession(toSession(data));
-  return true;
-}
-
-function logout() {
-  clearSession();
-}
-
-async function refreshSession(session) {
-  const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
-    method: "POST",
-    headers: { apikey: SUPABASE_ANON_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ refresh_token: session.refreshToken }),
-  });
-  if (!response.ok) {
-    clearSession();
-    return null;
+  function writeSession(session) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
   }
-  const data = await response.json();
-  const next = toSession(data);
-  writeSession(next);
-  return next;
-}
 
-// Devuelve una sesión con un access token vigente, refrescando si está por
-// vencer (margen de 5 minutos), o null si no hay sesión / no se pudo refrescar.
-async function ensureSession() {
-  let session = readSession();
-  if (!session) return null;
-  if (session.expiresAt - Date.now() < 5 * 60 * 1000) {
-    session = await refreshSession(session);
+  function clearSession() {
+    localStorage.removeItem(SESSION_KEY);
   }
-  return session;
-}
 
-async function authedFetch(url, opts = {}) {
-  let session = await ensureSession();
-  if (!session) throw new Error("no_session");
+  function toSession(tokenResponse) {
+    return {
+      accessToken: tokenResponse.access_token,
+      refreshToken: tokenResponse.refresh_token,
+      expiresAt: Date.now() + tokenResponse.expires_in * 1000,
+    };
+  }
 
-  const doFetch = (token) =>
-    fetch(url, {
-      ...opts,
-      headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}`, apikey: SUPABASE_ANON_KEY },
+  async function login(password) {
+    const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: "POST",
+      headers: { apikey: SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ email: ADMIN_EMAIL, password }),
     });
-
-  let response = await doFetch(session.accessToken);
-  if (response.status === 401) {
-    session = await refreshSession(session);
-    if (!session) throw new Error("no_session");
-    response = await doFetch(session.accessToken);
+    if (!response.ok) return false;
+    const data = await response.json();
+    writeSession(toSession(data));
+    return true;
   }
-  return response;
-}
 
-window.mpmAdminAuth = { login, logout, ensureSession, authedFetch, SUPABASE_URL, SUPABASE_ANON_KEY };
+  function logout() {
+    clearSession();
+  }
+
+  async function refreshSession(session) {
+    const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+      method: "POST",
+      headers: { apikey: SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh_token: session.refreshToken }),
+    });
+    if (!response.ok) {
+      clearSession();
+      return null;
+    }
+    const data = await response.json();
+    const next = toSession(data);
+    writeSession(next);
+    return next;
+  }
+
+  // Devuelve una sesión con un access token vigente, refrescando si está por
+  // vencer (margen de 5 minutos), o null si no hay sesión / no se pudo refrescar.
+  async function ensureSession() {
+    let session = readSession();
+    if (!session) return null;
+    if (session.expiresAt - Date.now() < 5 * 60 * 1000) {
+      session = await refreshSession(session);
+    }
+    return session;
+  }
+
+  async function authedFetch(url, opts = {}) {
+    let session = await ensureSession();
+    if (!session) throw new Error("no_session");
+
+    const doFetch = (token) =>
+      fetch(url, {
+        ...opts,
+        headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}`, apikey: SUPABASE_ANON_KEY },
+      });
+
+    let response = await doFetch(session.accessToken);
+    if (response.status === 401) {
+      session = await refreshSession(session);
+      if (!session) throw new Error("no_session");
+      response = await doFetch(session.accessToken);
+    }
+    return response;
+  }
+
+  window.mpmAdminAuth = { login, logout, ensureSession, authedFetch, SUPABASE_URL, SUPABASE_ANON_KEY };
+})();
