@@ -65,6 +65,10 @@
             <span class="admin-kpi__label">Consultas totales</span>
             <strong class="admin-kpi__value" data-kpi="leadsTotal">—</strong>
           </article>
+          <article class="admin-kpi">
+            <span class="admin-kpi__label">Tasa de conversión</span>
+            <strong class="admin-kpi__value" data-kpi="conversion">—</strong>
+          </article>
         </section>
 
         <section class="admin-card admin-sources" aria-label="Origen de las visitas">
@@ -76,6 +80,28 @@
             <p class="admin-empty">Cargando…</p>
           </div>
         </section>
+
+        <div class="admin-grid-2">
+          <section class="admin-card" aria-label="Canal preferido">
+            <div class="admin-card__head">
+              <h2>Canal preferido</h2>
+              <p class="admin-card__note">Todas las consultas, no solo el período.</p>
+            </div>
+            <div id="channel-list" class="admin-sources__list">
+              <p class="admin-empty">Cargando…</p>
+            </div>
+          </section>
+
+          <section class="admin-card" aria-label="Tamaño de grupo más pedido">
+            <div class="admin-card__head">
+              <h2>Tamaño de grupo</h2>
+              <p class="admin-card__note">Todas las consultas, no solo el período.</p>
+            </div>
+            <div id="guests-list" class="admin-sources__list">
+              <p class="admin-empty">Cargando…</p>
+            </div>
+          </section>
+        </div>
 
         <section class="admin-card admin-leads" aria-label="Consultas recibidas">
           <div class="admin-card__head">

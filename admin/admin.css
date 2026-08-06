@@ -11,6 +11,11 @@
   --viz-redes: #1baf7a;
   --viz-ads: #eda100;
   --viz-referidos: #e87ba4;
+  /* Canal: 2 identidades categóricas propias, no reusan el set de arriba
+     (son un chart distinto). Grupo: ordinal (1 a 8 personas) — un solo hue. */
+  --viz-whatsapp: #1baf7a;
+  --viz-email: #ed7355;
+  --viz-guests: #65aaa3;
 }
 
 .admin-body { background: var(--cream); min-height: 100vh; }
@@ -49,7 +54,8 @@
 /* --- Layout --- */
 .admin-main { width: min(1080px, calc(100vw - 48px)); margin: 0 auto; padding: 32px 0 64px; display: grid; gap: 24px; }
 
-.admin-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.admin-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+.admin-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .admin-kpi { padding: 22px; background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow); display: grid; gap: 6px; }
 .admin-kpi__label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
 .admin-kpi__value { font-family: "Fraunces", Georgia, serif; font-size: 40px; line-height: 1; color: var(--ink); }
@@ -85,6 +91,7 @@
 
 @media (max-width: 900px) {
   .admin-kpis { grid-template-columns: repeat(2, 1fr); }
+  .admin-grid-2 { grid-template-columns: 1fr; }
   .admin-lead { grid-template-columns: 1fr; gap: 4px; }
   .admin-source { grid-template-columns: 100px 1fr 48px; }
 }

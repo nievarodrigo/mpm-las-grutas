@@ -18,6 +18,8 @@ const loginForm = document.getElementById("login-form");
 const logoutButton = document.getElementById("logout-button");
 const sourcesList = document.getElementById("sources-list");
 const leadsList = document.getElementById("leads-list");
+const channelList = document.getElementById("channel-list");
+const guestsList = document.getElementById("guests-list");
 
 let allLeads = [];
 let currentPeriod = "today";
@@ -76,28 +78,71 @@ async function markContacted(id, button) {
 function renderKPIs(analytics) {
   const since = periodSince(currentPeriod);
   const inPeriod = allLeads.filter((lead) => new Date(lead.created_at) >= since);
+  const visitors = analytics.visitors ?? 0;
   document.querySelector('[data-kpi="pageviews"]').textContent = analytics.pageviews ?? "—";
   document.querySelector('[data-kpi="visitors"]').textContent = analytics.visitors ?? "—";
   document.querySelector('[data-kpi="leadsNew"]').textContent = inPeriod.filter((l) => l.status === "nuevo").length;
   document.querySelector('[data-kpi="leadsTotal"]').textContent = inPeriod.length;
+  document.querySelector('[data-kpi="conversion"]').textContent =
+    visitors > 0 ? `${((inPeriod.length / visitors) * 100).toFixed(1)}%` : "—";
 }
 
-function renderSources(sources) {
-  const total = SOURCE_ORDER.reduce((sum, key) => sum + (sources[key] || 0), 0);
+// items: [{ key, label, value, color }]. Barra horizontal genérica, reusada
+// por origen de tráfico, canal y tamaño de grupo — misma anatomía (track +
+// fill redondeado + valor directo), solo cambian los datos y el color.
+function renderBarList(container, items, emptyMessage) {
+  const total = items.reduce((sum, item) => sum + item.value, 0);
   if (total === 0) {
-    sourcesList.innerHTML = '<p class="admin-empty">Todavía no hay suficientes visitas para desglosar el origen. Esto se va a ir completando.</p>';
+    container.innerHTML = `<p class="admin-empty">${emptyMessage}</p>`;
     return;
   }
-  sourcesList.innerHTML = SOURCE_ORDER.map((key) => {
-    const value = sources[key] || 0;
+  container.innerHTML = items.map(({ label, value, color }) => {
     const pct = Math.round((value / total) * 100);
     return `
       <div class="admin-source">
-        <span class="admin-source__label"><span class="admin-source__dot" style="background:var(--viz-${key})"></span>${SOURCE_LABELS[key]}</span>
-        <div class="admin-source__track"><div class="admin-source__fill" style="width:${pct}%;background:var(--viz-${key})"></div></div>
+        <span class="admin-source__label"><span class="admin-source__dot" style="background:${color}"></span>${escapeHtml(label)}</span>
+        <div class="admin-source__track"><div class="admin-source__fill" style="width:${pct}%;background:${color}"></div></div>
         <span class="admin-source__value">${value} (${pct}%)</span>
       </div>`;
   }).join("");
+}
+
+function renderSources(sources) {
+  const items = SOURCE_ORDER.map((key) => ({
+    label: SOURCE_LABELS[key],
+    value: sources[key] || 0,
+    color: `var(--viz-${key})`,
+  }));
+  renderBarList(sourcesList, items, "Todavía no hay suficientes visitas para desglosar el origen. Esto se va a ir completando.");
+}
+
+function renderChannels() {
+  const whatsapp = allLeads.filter((l) => l.channel === "whatsapp").length;
+  const email = allLeads.filter((l) => l.channel === "email").length;
+  renderBarList(
+    channelList,
+    [
+      { label: "WhatsApp", value: whatsapp, color: "var(--viz-whatsapp)" },
+      { label: "Email", value: email, color: "var(--viz-email)" },
+    ],
+    "Todavía no hay consultas para desglosar por canal."
+  );
+}
+
+function renderGuests() {
+  const counts = {};
+  allLeads.forEach((lead) => {
+    const key = lead.guests ? `${lead.guests}` : "Sin especificar";
+    counts[key] = (counts[key] || 0) + 1;
+  });
+  const items = Object.keys(counts)
+    .sort((a, b) => (a === "Sin especificar" ? 1 : b === "Sin especificar" ? -1 : Number(a) - Number(b)))
+    .map((key) => ({
+      label: key === "Sin especificar" ? key : `${key} persona${key === "1" ? "" : "s"}`,
+      value: counts[key],
+      color: "var(--viz-guests)",
+    }));
+  renderBarList(guestsList, items, "Todavía no hay consultas para desglosar por tamaño de grupo.");
 }
 
 function renderLeads() {
@@ -141,9 +186,13 @@ async function loadDashboard() {
     allLeads = leads;
     renderKPIs(analytics);
     renderSources(analytics.ok === false ? {} : analytics.sources || {});
+    renderChannels();
+    renderGuests();
     renderLeads();
   } catch (_) {
     sourcesList.innerHTML = '<p class="admin-empty">No pudimos cargar esto. Recargá la página.</p>';
+    channelList.innerHTML = '<p class="admin-empty">No pudimos cargar esto. Recargá la página.</p>';
+    guestsList.innerHTML = '<p class="admin-empty">No pudimos cargar esto. Recargá la página.</p>';
     leadsList.innerHTML = '<p class="admin-empty">No pudimos cargar esto. Recargá la página.</p>';
   } finally {
     document.querySelectorAll(".admin-kpi__value").forEach((el) => el.classList.remove("is-loading"));
