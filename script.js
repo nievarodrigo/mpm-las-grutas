@@ -39,41 +39,154 @@ function showToast() {
   setTimeout(() => toast.classList.remove("show"), 1800);
 }
 
+function todayLocalISODate() {
+  const now = new Date();
+  const offsetMs = now.getTimezoneOffset() * 60000;
+  return new Date(now - offsetMs).toISOString().slice(0, 10);
+}
+document.querySelectorAll('input[type="date"]').forEach((input) => {
+  input.min = todayLocalISODate();
+});
+
+const CONTACT_MODES = {
+  whatsapp: { type: "text", autocomplete: "tel", placeholder: "Ej. 11 2345 6789", label: "WhatsApp" },
+  email: { type: "email", autocomplete: "email", placeholder: "tu@email.com", label: "Email" },
+};
+
+const channelPicker = document.querySelectorAll('.channel-toggle input[name="channel-picker"]');
+let resetChannelToggle = () => {};
+
+if (channelPicker.length) {
+  const heroForm = document.querySelector("#consultar .js-lead-form");
+  const contactInput = heroForm.querySelector('[data-role="contact"]');
+  const contactLabel = heroForm.querySelector(".js-contact-label");
+  const channelField = heroForm.querySelector('input[name="channel"]');
+
+  const setChannel = (channel) => {
+    const mode = CONTACT_MODES[channel] || CONTACT_MODES.whatsapp;
+    channelField.value = channel;
+    contactInput.type = mode.type;
+    contactInput.autocomplete = mode.autocomplete;
+    contactInput.placeholder = mode.placeholder;
+    contactLabel.textContent = mode.label;
+  };
+
+  channelPicker.forEach((radio) => {
+    radio.addEventListener("change", () => radio.checked && setChannel(radio.value));
+  });
+
+  // Los radios del toggle viven fuera del <form> (a propósito, para que no dupliquen
+  // la clave "channel" en el FormData junto con el hidden), así que form.reset() no
+  // los toca — hay que volverlos a whatsapp a mano tras un envío exitoso por email.
+  resetChannelToggle = () => {
+    const whatsappRadio = document.querySelector('.channel-toggle input[value="whatsapp"]');
+    if (whatsappRadio) whatsappRadio.checked = true;
+    setChannel("whatsapp");
+  };
+}
+
+function setLoading(button, loading) {
+  if (loading) {
+    button.dataset.label = button.dataset.label || button.innerHTML;
+    button.disabled = true;
+    button.classList.add("is-loading");
+  } else {
+    button.disabled = false;
+    button.classList.remove("is-loading");
+    if (button.dataset.label) button.innerHTML = button.dataset.label;
+  }
+}
+
+function showFormFeedback(form, text, kind) {
+  const feedback = form.querySelector(".form-feedback");
+  if (!feedback) return;
+  feedback.textContent = text;
+  feedback.classList.toggle("form-feedback--error", kind === "error");
+  feedback.classList.toggle("form-feedback--success", kind === "success");
+  feedback.hidden = false;
+}
+
+function postLead(payload) {
+  return fetch("/api/leads", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
 document.querySelectorAll(".js-lead-form").forEach((form) => {
-  form.addEventListener("submit", (event) => {
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
 
     const data = new FormData(form);
+    if ((data.get("hp") || "").toString().trim() !== "") return;
+
+    const channel = data.get("channel") || "whatsapp";
     const name = data.get("name");
     const guests = data.get("guests") || "a definir";
     const dateValue = data.get("date");
     const contact = data.get("contact");
-    const date = dateValue
-      ? new Intl.DateTimeFormat("es-AR", { day: "2-digit", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${dateValue}T00:00:00Z`))
-      : "a definir";
 
-    const message = [
-      "Hola MPM 👋 Quisiera consultar disponibilidad.",
-      "",
-      `Nombre: ${name}`,
-      `Grupo: ${guests}`,
-      `Fecha estimada: ${date}`,
-      `Mi contacto: ${contact}`,
-      "",
-      "Vi la web de Las Grutas todo el año."
-    ].join("\n");
+    const payload = {
+      name,
+      contact,
+      channel,
+      guests: data.get("guests") || null,
+      date: dateValue || null,
+      hp: data.get("hp") || "",
+    };
 
-    try {
-      const lead = { name, guests, date: dateValue || "", contact, createdAt: new Date().toISOString() };
-      const leads = JSON.parse(localStorage.getItem("mpm_consultas") || "[]");
-      localStorage.setItem("mpm_consultas", JSON.stringify([...leads.slice(-9), lead]));
-    } catch (_) {
-      // WhatsApp remains the source of truth if private browsing blocks storage.
+    if (channel === "whatsapp") {
+      // Fire-and-forget: el registro en Supabase es un side effect, nunca un gate.
+      // Si falla o tarda, WhatsApp se abre igual, con el mismo timing de siempre.
+      postLead(payload).catch(() => {});
+
+      const date = dateValue
+        ? new Intl.DateTimeFormat("es-AR", { day: "2-digit", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${dateValue}T00:00:00Z`))
+        : "a definir";
+
+      const message = [
+        "Hola MPM 👋 Quisiera consultar disponibilidad.",
+        "",
+        `Nombre: ${name}`,
+        `Grupo: ${guests}`,
+        `Fecha estimada: ${date}`,
+        `Mi contacto: ${contact}`,
+        "",
+        "Vi la web de Las Grutas todo el año."
+      ].join("\n");
+
+      showToast();
+      setTimeout(() => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer"), 220);
+      return;
     }
 
-    showToast();
-    setTimeout(() => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer"), 220);
+    // channel === "email": acá sí esperamos la respuesta, no hay fallback client-side.
+    setLoading(submitBtn, true);
+    try {
+      const response = await postLead(payload);
+      const result = await response.json();
+      if (result.ok) {
+        showFormFeedback(
+          form,
+          result.emailSent
+            ? "¡Listo! Te vamos a responder por email a la brevedad."
+            : "Recibimos tu consulta. El mail tardó en salir, pero ya la tenemos anotada.",
+          "success"
+        );
+        form.reset();
+        resetChannelToggle();
+      } else {
+        showFormFeedback(form, result.message || "No pudimos enviar tu consulta. Probá por WhatsApp.", "error");
+      }
+    } catch (_) {
+      showFormFeedback(form, "No pudimos conectar. Probá escribirnos directo por WhatsApp.", "error");
+    } finally {
+      setLoading(submitBtn, false);
+    }
   });
 });
 

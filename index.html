@@ -57,6 +57,7 @@
         </button>
         <nav class="nav-links" aria-label="Navegación principal">
           <a href="#departamentos">El complejo</a>
+          <a href="#comodidades">Comodidades</a>
           <a href="#galeria">Fotos</a>
           <a href="#ubicacion">Ubicación</a>
           <a class="button button--small" href="#consultar">Consultar estadía</a>
@@ -74,7 +75,7 @@
             <h1 id="hero-title">Las Grutas<br /><em>todo el año.</em></h1>
             <p class="hero__lead">
               Departamentos cómodos para compartir, descansar y volver a sentir el mar.
-              Para <strong>4, 5 o 6 personas</strong>.
+              Para <strong>4, 5 o 6 personas</strong>. Atendido por sus dueños.
             </p>
             <div class="hero__actions">
               <a class="button button--coral" href="#consultar">Quiero consultar</a>
@@ -91,8 +92,20 @@
             <div class="lead-card__tag">SIN COMPROMISO</div>
             <p class="kicker">Tu próxima escapada</p>
             <h2>Consultá disponibilidad</h2>
-            <p class="lead-card__intro">Dejanos tus datos y te respondemos por WhatsApp con opciones y tarifas. Somos los dueños.</p>
+            <p class="lead-card__intro">Dejanos tus datos y te respondemos con opciones y tarifas. Somos los dueños.</p>
+            <fieldset class="channel-toggle" role="radiogroup" aria-label="Cómo preferís que te contactemos">
+              <legend class="visually-hidden">Canal de contacto</legend>
+              <label class="channel-toggle__option">
+                <input type="radio" name="channel-picker" value="whatsapp" checked />
+                <span>WhatsApp</span>
+              </label>
+              <label class="channel-toggle__option">
+                <input type="radio" name="channel-picker" value="email" />
+                <span>Email</span>
+              </label>
+            </fieldset>
             <form class="lead-form js-lead-form">
+              <input type="hidden" name="channel" value="whatsapp" />
               <label>
                 <span>Nombre</span>
                 <input name="name" type="text" autocomplete="name" placeholder="¿Cómo te llamás?" required />
@@ -113,13 +126,17 @@
                 </label>
               </div>
               <label>
-                <span>WhatsApp o email</span>
-                <input name="contact" type="text" autocomplete="tel" placeholder="Ej. 11 2345 6789" required />
+                <span class="js-contact-label">WhatsApp</span>
+                <input name="contact" id="lead-contact" data-role="contact" type="text" autocomplete="tel" placeholder="Ej. 11 2345 6789" required />
               </label>
+              <div class="field-guard" aria-hidden="true">
+                <label>No completar este campo<input type="text" name="hp" tabindex="-1" autocomplete="off" /></label>
+              </div>
               <button class="button button--dark button--block" type="submit">
                 Recibir opciones <span>→</span>
               </button>
               <p class="form-note">Respuesta directa, sin intermediarios.</p>
+              <p class="form-feedback" role="status" aria-live="polite" hidden></p>
             </form>
           </aside>
         </div>
@@ -156,8 +173,8 @@
 
         <div class="shell feature-layout">
           <figure class="feature-photo reveal">
-            <img src="/public/images/comedor-cocina.webp" alt="Comedor y cocina integrada de un departamento MPM" />
-            <figcaption>Ambientes prácticos y luminosos</figcaption>
+            <img src="/public/images/comedor-cocina.webp" alt="Cocina y comedor integrados junto a una cucheta" />
+            <figcaption>Cocina, comedor y cucheta comparten un mismo ambiente luminoso</figcaption>
           </figure>
           <div class="feature-list">
             <article class="feature-item reveal">
@@ -184,6 +201,73 @@
         </div>
       </section>
 
+      <section class="section amenities" id="comodidades">
+        <div class="shell amenities__intro reveal">
+          <p class="eyebrow"><span></span> Los 4 departamentos, equipados</p>
+          <h2>Todo lo que necesitás,<br /><em>ya está ahí.</em></h2>
+          <p>Los departamentos del complejo son muy similares entre sí. Todos vienen con estas comodidades incluidas, sin costo extra.</p>
+        </div>
+
+        <div class="shell amenities-grid">
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M4.9 6.5l14.2 11M19.1 6.5L4.9 17.5"/></svg></span>
+            <p>Aire acondicionado</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" stroke="none"><path d="M12 21.5c3.6 0 6-2.6 6-6 0-3.2-2-4.7-3-6.2.3 2-.6 3.3-1.9 3.7.6-3-1-5.3-3.3-6.8.4 2.6-1 4.2-2.2 5.8-1.1 1.5-1.6 2.7-1.6 3.5 0 3.4 2.4 6 6 6Z"/></svg></span>
+            <p>Calefactores a gas</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 12V7M12 12l4.3 2.5M12 12l-4.3 2.5"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg></span>
+            <p>Ventiladores de pared</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18v-6.5A2.5 2.5 0 0 1 5.5 9h13a2.5 2.5 0 0 1 2.5 2.5V18"/><path d="M3 15.5h18"/><path d="M6.5 11V8a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v3"/></svg></span>
+            <p>Habitación con cama matrimonial y Smart TV 32"</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="11.5" rx="1.6"/><path d="M8 20.5h8M12 17v3.5"/></svg></span>
+            <p>Otro ambiente con 2, 3 o 4 camas y Smart TV 43"</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 15a7.5 7.5 0 0 1 15 0"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/><path d="M12 15v6M9 21h6"/></svg></span>
+            <p>TV por cable y DirecTV con programación premium</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5a11.3 11.3 0 0 1 16 0M6.8 13a7.3 7.3 0 0 1 10.4 0M9.7 16.4a3.3 3.3 0 0 1 4.6 0"/><circle cx="12" cy="19.5" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+            <p>2 redes de WiFi en todo el complejo</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="4.5" rx="1.2"/><rect x="4" y="13" width="16" height="4.5" rx="1.2"/></svg></span>
+            <p>Ropa de cama incluida, con recambios periódicos</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="12" r="6.5"/><path d="M17 5v5M19 5v5M18 10v9"/></svg></span>
+            <p>Vajilla completa para 4, 5 o 6 personas</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M10 16V8h3.2a2.6 2.6 0 1 1 0 5.2H10"/></svg></span>
+            <p>Estacionamiento individual cerrado</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9.5" width="16" height="3.5" rx="1"/><path d="M4 13v3.5M20 13v3.5M8 9.5V6.5M16 9.5V6.5"/></svg></span>
+            <p>Patio trasero cerrado con parrilla, lavadero y tendedero</p>
+          </div>
+          <div class="amenity-card reveal">
+            <span class="amenity-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" stroke="none"><ellipse cx="7.2" cy="10.5" rx="2" ry="2.4"/><ellipse cx="12" cy="8.3" rx="2" ry="2.4"/><ellipse cx="16.8" cy="10.5" rx="2" ry="2.4"/><ellipse cx="12" cy="15.5" rx="4.3" ry="3.7"/></svg></span>
+            <p>Aceptamos mascotas</p>
+          </div>
+        </div>
+
+        <div class="shell amenities-protocol reveal">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l7 2.8v5.2c0 5-3 8.3-7 10.5-4-2.2-7-5.5-7-10.5V6.3Z"/><path d="M9 12l2 2 4-4.5"/></svg>
+          <div>
+            <strong>Sello sanitario habilitante</strong>
+            <p>Cumplimos todos los protocolos sanitarios establecidos por las autoridades provinciales para la actividad, y contamos con el sello sanitario correspondiente.</p>
+          </div>
+        </div>
+      </section>
+
       <section class="section gallery-section" id="galeria">
         <div class="shell section-heading reveal">
           <div>
@@ -193,24 +277,24 @@
           <p>Fotos reales del complejo. Sin sorpresas: lo que ves es lo que te espera.</p>
         </div>
         <div class="shell gallery-grid">
-          <button class="gallery-card gallery-card--wide reveal" data-image="/public/images/dormitorio-azul.webp" data-alt="Dormitorio azul con cama matrimonial">
-            <img src="/public/images/dormitorio-azul.webp" alt="Dormitorio azul con cama matrimonial" />
+          <button class="gallery-card gallery-card--wide reveal" data-image="/public/images/dormitorio-azul.webp" data-alt="Dormitorio matrimonial con paredes celestes, veladores a los dos lados y cuadro con vista al mar.">
+            <img src="/public/images/dormitorio-azul.webp" alt="Dormitorio con paredes celestes y cama matrimonial" />
             <span>Dormitorios</span>
           </button>
-          <button class="gallery-card gallery-card--tall reveal" data-image="/public/images/parrilla.webp" data-alt="Patio con parrilla del complejo">
-            <img src="/public/images/parrilla.webp" alt="Patio con parrilla del complejo" />
+          <button class="gallery-card gallery-card--tall reveal" data-image="/public/images/parrilla.webp" data-alt="Patio techado con parrilla de ladrillo, mesa y sillas para comer al aire libre.">
+            <img src="/public/images/parrilla.webp" alt="Patio con parrilla de ladrillo, mesa y sillas" />
             <span>Patio &amp; parrilla</span>
           </button>
-          <button class="gallery-card reveal" data-image="/public/images/cocina.webp" data-alt="Cocina equipada">
-            <img src="/public/images/cocina.webp" alt="Cocina equipada" />
+          <button class="gallery-card reveal" data-image="/public/images/cocina.webp" data-alt="Cocina completa con heladera, anafe a gas, microondas, dispenser de agua y TV con Netflix.">
+            <img src="/public/images/cocina.webp" alt="Cocina equipada con heladera, anafe, microondas y TV" />
             <span>Cocina</span>
           </button>
-          <button class="gallery-card reveal" data-image="/public/images/bano.webp" data-alt="Baño completo">
-            <img src="/public/images/bano.webp" alt="Baño completo" />
+          <button class="gallery-card reveal" data-image="/public/images/bano.webp" data-alt="Baño completo con bidet, inodoro, bacha con espejo y ducha con cortina.">
+            <img src="/public/images/bano.webp" alt="Baño completo con bidet, inodoro, bacha y ducha" />
             <span>Baño completo</span>
           </button>
-          <button class="gallery-card gallery-card--wide reveal" data-image="/public/images/dormitorio-rosa.webp" data-alt="Dormitorio matrimonial rosa">
-            <img src="/public/images/dormitorio-rosa.webp" alt="Dormitorio matrimonial rosa" />
+          <button class="gallery-card gallery-card--wide reveal" data-image="/public/images/dormitorio-rosa.webp" data-alt="Dormitorio matrimonial con paredes rosa pastel, veladores y cuadro con vista a la playa.">
+            <img src="/public/images/dormitorio-rosa.webp" alt="Dormitorio con paredes rosa pastel y cama matrimonial" />
             <span>Comodidad</span>
           </button>
         </div>
@@ -323,11 +407,15 @@
             <p>Dejanos tu contacto. Te mandamos disponibilidad y tarifas directo por WhatsApp, sin intermediarios.</p>
           </div>
           <form class="quick-form js-lead-form reveal">
+            <input type="hidden" name="channel" value="whatsapp" />
             <label><span>Nombre</span><input name="name" type="text" placeholder="Tu nombre" autocomplete="name" required /></label>
             <label><span>WhatsApp o email</span><input name="contact" type="text" placeholder="Tu contacto" autocomplete="tel" required /></label>
             <div class="quick-form__row">
               <label><span>Personas</span><select name="guests" required><option value="" selected disabled>Elegí</option><option>4 personas</option><option>5 personas</option><option>6 personas</option></select></label>
               <label><span>Fecha</span><input name="date" type="date" /></label>
+            </div>
+            <div class="field-guard" aria-hidden="true">
+              <label>No completar este campo<input type="text" name="hp" tabindex="-1" autocomplete="off" /></label>
             </div>
             <button class="button button--coral button--block" type="submit">Consultar ahora <span>→</span></button>
             <small>No enviamos spam. Solo información sobre tu consulta.</small>
