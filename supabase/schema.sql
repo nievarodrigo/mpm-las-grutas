@@ -24,3 +24,32 @@ create policy "anon can insert leads"
   for insert
   to anon
   with check (true);
+
+-- Panel de administración: el rol `authenticated` (login con contraseña
+-- compartida vía Supabase Auth) puede leer todas las filas y actualizar
+-- únicamente la columna `status`. El grant de columna es la barrera real:
+-- aunque haya un bug en el frontend del panel, Postgres rechaza cualquier
+-- intento de modificar name/contact/message, no depende del JS.
+--
+-- El REVOKE es necesario: Supabase le otorga a `authenticated` privilegios
+-- amplios (insert/update en todas las columnas) por default a nivel de
+-- schema. Sin este REVOKE primero, el GRANT column-level de abajo queda
+-- sin efecto — los grants son aditivos, no restringen uno más amplio ya
+-- existente (verificado: sin el REVOKE, un PATCH a `name` desde el panel
+-- pasaba igual pese al grant angosto).
+revoke insert, update on leads from authenticated;
+grant select on leads to authenticated;
+grant update (status) on leads to authenticated;
+
+create policy "authenticated can select leads"
+  on leads
+  for select
+  to authenticated
+  using (true);
+
+create policy "authenticated can update lead status"
+  on leads
+  for update
+  to authenticated
+  using (true)
+  with check (true);

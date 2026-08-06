@@ -1,0 +1,86 @@
+/*
+  Paleta categórica: se usan los primeros 6 slots del tema validado por
+  defecto del skill dataviz (orden fijo, separación CVD verificada para
+  pares adyacentes — ver referencia interna del proyecto). No son los
+  colores de marca de MPM a propósito: son datos, no chrome de marca.
+*/
+:root {
+  --viz-directo: #667773;
+  --viz-organico: #2a78d6;
+  --viz-ia: #eb6834;
+  --viz-redes: #1baf7a;
+  --viz-ads: #eda100;
+  --viz-referidos: #e87ba4;
+}
+
+.admin-body { background: var(--cream); min-height: 100vh; }
+
+/* --- Login --- */
+.admin-login { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.admin-login__card { width: min(380px, 100%); display: grid; gap: 14px; padding: 36px; background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; }
+.admin-login__logo { width: 64px; margin: 0 auto 4px; }
+.admin-login__card h1 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 26px; }
+.admin-login__hint { margin: 0 0 8px; color: var(--muted); font-size: 13px; }
+.admin-login__card label { display: grid; gap: 6px; text-align: left; }
+.admin-login__card label > span { font-size: 11px; font-weight: 700; color: var(--ink); }
+
+/* --- Header --- */
+.admin-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 20px var(--shell-pad, 24px); background: var(--ink-deep); color: white; }
+.admin-header__brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; letter-spacing: .04em; }
+.admin-header__brand img { width: 40px; height: auto; }
+.admin-header__actions { display: flex; align-items: center; gap: 14px; }
+
+.admin-period { display: inline-flex; gap: 4px; padding: 4px; background: rgba(255,255,255,.1); border-radius: 100px; }
+.admin-period__chip { border: 0; background: transparent; color: rgba(255,255,255,.75); padding: 7px 14px; border-radius: 100px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s, color .2s; }
+.admin-period__chip.is-active { background: white; color: var(--ink-deep); }
+
+.admin-header .button--small { background: rgba(255,255,255,.12); color: white; }
+.admin-header .button--small:hover { background: rgba(255,255,255,.2); }
+
+/* Los mismos chips se reusan para los filtros de la tabla, sobre fondo claro */
+.admin-filters { display: inline-flex; gap: 4px; padding: 4px; background: var(--sand); border-radius: 100px; }
+.admin-filters .admin-period__chip { color: var(--muted); }
+.admin-filters .admin-period__chip.is-active { background: var(--ink-deep); color: white; }
+
+/* --- Layout --- */
+.admin-main { width: min(1080px, calc(100vw - 48px)); margin: 0 auto; padding: 32px 0 64px; display: grid; gap: 24px; }
+
+.admin-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.admin-kpi { padding: 22px; background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow); display: grid; gap: 6px; }
+.admin-kpi__label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.admin-kpi__value { font-family: "Fraunces", Georgia, serif; font-size: 40px; line-height: 1; color: var(--ink); }
+.admin-kpi__value.is-loading { color: var(--line); }
+
+.admin-card { padding: 26px; background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow); }
+.admin-card__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.admin-card__head h2 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 20px; }
+.admin-card__note { margin: 0; color: var(--muted); font-size: 12px; }
+
+.admin-empty { margin: 0; padding: 20px 0; text-align: center; color: var(--muted); font-size: 13px; }
+
+/* --- Origen de tráfico: barras horizontales, extremo redondeado, etiqueta directa --- */
+.admin-sources__list { display: grid; gap: 12px; }
+.admin-source { display: grid; grid-template-columns: 130px 1fr 56px; align-items: center; gap: 12px; }
+.admin-source__label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink); }
+.admin-source__dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.admin-source__track { height: 10px; background: var(--sand); border-radius: 100px; overflow: hidden; }
+.admin-source__fill { height: 100%; border-radius: 100px; min-width: 4px; transition: width .4s ease; }
+.admin-source__value { text-align: right; font-size: 12px; font-weight: 700; color: var(--muted); }
+
+/* --- Tabla de leads --- */
+.admin-leads__list { display: grid; gap: 10px; }
+.admin-lead { display: grid; grid-template-columns: 100px 1fr 140px 90px 100px 1fr 110px 130px; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; font-size: 13px; }
+.admin-lead__date { color: var(--muted); font-size: 12px; }
+.admin-lead__name { font-weight: 700; color: var(--ink); }
+.admin-lead__contact a { text-decoration: underline; }
+.admin-lead__message { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.admin-badge { justify-self: start; padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; }
+.admin-badge--nuevo { background: rgba(237,115,85,.14); color: var(--coral-dark); }
+.admin-badge--contactado { background: rgba(101,170,163,.16); color: var(--ink-deep); }
+
+@media (max-width: 900px) {
+  .admin-kpis { grid-template-columns: repeat(2, 1fr); }
+  .admin-lead { grid-template-columns: 1fr; gap: 4px; }
+  .admin-source { grid-template-columns: 100px 1fr 48px; }
+}
